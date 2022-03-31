@@ -1,17 +1,11 @@
 export class Team {
   nombre: string;
-  ganados: number;
-  perdidos: number;
-  empates: number;
-  totales: number;
-  puntos:number;
-  constructor(nombre: string, ganados: number = 0, perdidos: number = 0, empates: number = 0) {
+  ganados: number=0;
+  perdidos: number=0;
+  empates: number=0;
+  puntos:number=0;
+  constructor(nombre: string) {
     this.nombre = nombre;
-    this.ganados = ganados;
-    this.perdidos = perdidos;
-    this.empates = empates;
-    this.totales = ganados + perdidos + empates;
-    this.puntos = 0;
   }
 }
 export class Tournament {
@@ -55,24 +49,24 @@ export class Tournament {
         equipo1.puntos= equipo1.ganados * 3 + equipo1.empates;
         equipo2.puntos= equipo2.ganados * 3 + equipo2.empates;
       }
-      let modifiedArray: Team[]=Array.from(modified).sort(function(a, b) {
-        return b.puntos - a.puntos;
-      });
+      let modifiedArray: Team[]=Array.from(modified).sort((a, b) =>{
+        if (b.nombre < a.nombre) return 1;
+        return -1;
+     });
+      modifiedArray=modifiedArray.sort((a, b) =>{
+        if (b.puntos > a.puntos) return 1;
+        if (b.puntos == a.puntos) return 0;
+        return -1;
+     });
       for (let item of modifiedArray) {
         let totales: number = item.ganados + item.perdidos + item.empates;
         let puntos: number = item.ganados * 3 + item.empates;
+        let puntosString:string=(puntos >10)?" | " + puntos:" |  " + puntos;
         let nombre: string = item.nombre;
-        if(item.nombre=="Courageous Californians"){
-          header += ("\n" + item.nombre + "        |  " + totales + " |  " + item.ganados + " |  " + item.empates + " |  " + item.perdidos + " |  " + puntos);
-        }else if(item.nombre == "Devastating Donkeys"){
-          header += ("\n" + item.nombre + "            |  " + totales + " |  " + item.ganados + " |  " + item.empates + " |  " + item.perdidos + " |  " + puntos);
-          
-        }else{
-          header += ("\n" + item.nombre + "             |  " + totales + " |  " + item.ganados + " |  " + item.empates + " |  " + item.perdidos + " |  " + puntos);
+        while(nombre.length < 31){
+          nombre +=" ";
         }
-        if(item.puntos >= 10){
-          header += ("\n" + item.nombre + "            |  " + totales + " |  " + item.ganados + " |  " + item.empates + " |  " + item.perdidos + " | " + puntos);
-        }
+        header += ("\n" + nombre + "|  " + totales + " |  " + item.ganados + " |  " + item.empates + " |  " + item.perdidos + puntosString);
       }
     }
     return (header);
